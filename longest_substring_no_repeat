@@ -2,39 +2,24 @@
 # substring without duplicate characters.
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        # Given
-        # string "s"
-
-        # What we need to track
-        # Each character of the string as we go through it
-        # What characters we've seen already (also doubles as the final return)
-
-        # Logic
-        # Every time we hit a character, we add it to a our tracker
-        # final_answer++
-        # Check the next character against every character that currently
-        # exists in our tracker
-        # The moment we see a hit, 
-        
         # Establishing our return
         final_answer = 0
 
-        # Create the list of characters from the string
-        all_char_in_str = []
+        # The current run of unique characters
         seen_chars = []
 
-        # Fill the list with the chars from the string
         for c in range(len(s)):
-            # Append each character of s to our tracker (all_char_in_str)
-            all_char_in_str.append(s.index(c))
+            # If we've seen this character, drop characters from the FRONT
+            # of our tracker until the old copy is gone
+            while s[c] in seen_chars:
+                seen_chars.pop(0)
 
-        # Iterate through to determine if we've seen the element
-        for i in range(len(all_char_in_str)):
-            # 
+            # Now it's safe to add the current character
+            seen_chars.append(s[c])
 
-
-
-
+            # Keep the biggest run we've ever had
+            if len(seen_chars) > final_answer:
+                final_answer = len(seen_chars)
 
         # Return the final answer
         return final_answer
