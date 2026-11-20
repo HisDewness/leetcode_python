@@ -12,12 +12,8 @@ class ListNode:
 
 class Solution:
     def addTwoNumbers(self, l1: ListNode | None, l2: ListNode | None) -> ListNode | None:
-        # Given two linked lists with positive ints, stored descending
+        # Given two linked lists of non-negative ints, digits in reverse order
         # Actual passed in values are the heads of each list
-
-        # ListNodes saving the head of each passed in list (l1 and l2)
-        head1 = l1
-        head2 = l2
 
         # Lists to fill with the contents of the linked lists
         list1 = []
@@ -26,31 +22,43 @@ class Solution:
         final_answer = []
 
         # Get values of lists in order - iterate from head to tail
-        while l1 != None:
-            list1.append(list1.val)
-        while l2 != None:
-            list2.append(list2.val)
+        while l1 is not None:
+            list1.append(l1.val)
+            l1 = l1.next
+        while l2 is not None:
+            list2.append(l2.val)
+            l2 = l2.next
 
-        # Get the order right for traditional addition
-        list1.reverse
-        list2.reverse
+        # No reverse needed: index 0 is already the ones digit,
+        # which is where addition starts
 
-        # Iterate and add each element, with overflow setting the next
-        # position as 1 in the final list
-        for i in range(len(list1)):
+        # Iterate and add each element, carrying overflow into the next position
+        carry = 0
+        for i in range(max(len(list1), len(list2))):
+            # If one list ran out of digits, treat its digit as 0
+            digit1 = list1[i] if i < len(list1) else 0
+            digit2 = list2[i] if i < len(list2) else 0
+            total = digit1 + digit2 + carry
+
             # If the addition is less than 10, store the number outright
-            if(list1[i] + list2[i]) < 10:
-                final_answer[i] = list1[i] + list2[i]
-                # If not, get the overflow above 10 to the next position
+            if total < 10:
+                final_answer.append(total)
+                carry = 0
+            # If not, store the ones digit and carry 1 to the next position
             else:
-                final_answer[i] = ((list1[i] + list2[i]) - 10)
-                final_answer[i+1] = (list1[i] + list2[i]) - final_answer[i]
-        
-        # Once iteration is done and final_answer is filled, parse 
-        # and turn into combination of ListNode elements where self.val
-        # is the int value itself
-        final_return = ListNode(final_answer[0]) 
-        for j in range(len(final_answer)):
-            final_return.next = ListNode(final_answer[j], None)
-        
+                final_answer.append(total - 10)
+                carry = 1
+
+        # Leftover carry becomes a new highest digit (e.g. 5 + 5 = 10 -> [0, 1])
+        if carry:
+            final_answer.append(carry)
+
+        # Turn final_answer into a linked list
+        # final_return stays on the head, current moves forward attaching nodes
+        final_return = ListNode(final_answer[0])
+        current = final_return
+        for j in range(1, len(final_answer)):
+            current.next = ListNode(final_answer[j])
+            current = current.next
+
         return final_return
