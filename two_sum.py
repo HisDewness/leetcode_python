@@ -15,11 +15,12 @@ class Solution:
         # or we move onto list[i+1]
 
         # Brute Force
-        next_val = 0
-        # Start iterating
-        for curr in nums:
-            for next_val in nums:
+        # Outer loop: starting point to check addition from
+        for curr in range(len(nums)):
+            # Inner loop: checking every element's addition
+            # against the starting point
+            for next_val in range(curr+1, len(nums)):
                 # If the current position plus the next one == target, you win
                 if nums[curr] + nums[next_val] == target:
-                    return final_answer[curr, next_val]
+                    return [curr, next_val]
         return final_answer
